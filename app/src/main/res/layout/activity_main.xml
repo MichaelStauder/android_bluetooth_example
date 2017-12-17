@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,78 +8,57 @@
 
     <Button
         android:id="@+id/button2"
+        style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="88dp"
-        android:layout_height="48dp"
-        android:layout_marginBottom="55dp"
-        android:layout_marginEnd="149dp"
-        android:layout_marginStart="147dp"
-        android:layout_marginTop="50dp"
+        android:layout_height="47dp"
+        android:layout_alignStart="@+id/list"
+        android:layout_below="@+id/button"
+        android:layout_marginStart="88dp"
+        android:layout_marginTop="45dp"
+        android:onClick="Button3_OnClick"
         android:text="LED 2 ON"
-        app:layout_constraintBottom_toTopOf="@+id/button3"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="spread_inside" />
-
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="278dp"
-        android:layout_height="49dp"
-        android:layout_marginBottom="90dp"
-        android:layout_marginEnd="44dp"
-        android:layout_marginStart="62dp"
-        android:layout_marginTop="171dp"
-        android:ems="10"
-        android:inputType="textEmailAddress"
-        android:text="michael.stauder@iconnexys.nl"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button3" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="149dp"
-        android:layout_marginStart="147dp"
-        android:text="LED 1 ON"
-        app:layout_constraintBottom_toTopOf="@+id/button2"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0" />
+        tools:layout_editor_absoluteX="147dp"
+        tools:layout_editor_absoluteY="95dp" />
 
     <ListView
-        android:id="@+id/available_devices"
-        android:layout_width="368dp"
+        android:id="@+id/list"
+        android:background="@drawable/bg_key"
+        android:layout_width="292dp"
         android:layout_height="140dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="39dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.605" />
+        app:layout_constraintVertical_bias="0.977" />
 
     <Button
         android:id="@+id/button3"
-        android:layout_width="88dp"
-        android:layout_height="47dp"
-        android:layout_marginBottom="95dp"
-        android:layout_marginEnd="149dp"
-        android:layout_marginStart="147dp"
-        android:layout_marginTop="8dp"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="54dp"
+        android:layout_alignStart="@+id/button"
+        android:layout_centerVertical="true"
+        android:onClick="Button1_OnClick"
         android:text="All off"
-        app:layout_constraintBottom_toTopOf="@+id/editText"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button2" />
 
-</android.support.constraint.ConstraintLayout>
+    <Button
+        android:id="@+id/button"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="43dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/button2"
+        android:layout_marginTop="78dp"
+        android:onClick="Button2_OnClick"
+        android:text="LED 1 ON"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="147dp" />
+
+</RelativeLayout>

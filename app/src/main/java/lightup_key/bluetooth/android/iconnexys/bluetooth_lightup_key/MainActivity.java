@@ -7,6 +7,10 @@ import android.os.Bundle;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.EditText;
 import android.widget.ListView;
 
 import java.io.IOException;
@@ -22,6 +26,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+
+import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
 public class MainActivity extends Activity {
 
@@ -42,6 +48,7 @@ public class MainActivity extends Activity {
 
     public void Button3_OnClick(View v){
         Led_2_On();
+        openProximityScreen();
     }
 
     public void sendBtMsg(String msg2send){
@@ -87,6 +94,10 @@ public class MainActivity extends Activity {
     }
 
 
+    public void openProximityScreen()  {
+        Intent intent = new Intent(this, ProximityAlertActivity.class);
+        startActivity(intent);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -155,5 +166,4 @@ public class MainActivity extends Activity {
         });
 
     }
-
 }

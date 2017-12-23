@@ -49,7 +49,10 @@ public class ProximityAlertActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.coordinate_selection);
 
-        if (checkLocationPermission()) return;
+        if (checkLocationPermission()) {
+            Toast.makeText(this, "No location permission. Aborting...", Toast.LENGTH_LONG).show();
+            return;
+        }
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,

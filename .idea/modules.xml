@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/bluetooth_lightup_key.iml" filepath="$PROJECT_DIR$/bluetooth_lightup_key.iml" />
       <module fileurl="file://$PROJECT_DIR$/smartkey.iml" filepath="$PROJECT_DIR$/smartkey.iml" />
     </modules>

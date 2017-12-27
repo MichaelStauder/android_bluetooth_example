@@ -20,14 +20,14 @@
 
     <Button
         android:id="@+id/find_coordinates_button"
-        android:text="Find Coordinates"
+        android:text="@string/action_find_coordinates"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />
 
     <Button
         android:id="@+id/save_point_button"
-        android:text="Save Point"
+        android:text="@string/action_save_point"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         />

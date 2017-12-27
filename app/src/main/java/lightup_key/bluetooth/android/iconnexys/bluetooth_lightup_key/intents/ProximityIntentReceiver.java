@@ -1,4 +1,4 @@
-package lightup_key.bluetooth.android.iconnexys.bluetooth_lightup_key;
+package lightup_key.bluetooth.android.iconnexys.bluetooth_lightup_key.intents;
 
 import android.app.Notification;
 import android.app.NotificationManager;

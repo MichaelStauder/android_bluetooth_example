@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">bluetooth_lightup_key</string>
+    <string name="about_text">Contributors: Michael Stauder, Herman de Vette.</string>
+    <string name="about_version">Version 1.0.0</string>
+    <string name="action_led1_on">LED 1 ON</string>
+    <string name="action_led2_on">LED 2 ON</string>
+    <string name="action_all_off">ALL OFF</string>
+    <string name="action_location">SET LOCATION</string>
+    <string name="action_find_coordinates">Find Coordinates</string>
+    <string name="action_save_point">Save Point</string>
 </resources>

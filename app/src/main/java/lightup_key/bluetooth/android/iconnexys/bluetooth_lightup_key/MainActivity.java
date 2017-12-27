@@ -1,12 +1,16 @@
 package lightup_key.bluetooth.android.iconnexys.bluetooth_lightup_key;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -22,7 +26,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private final static int REQUEST_ENABLE_BT = 1;
 
@@ -32,22 +36,31 @@ public class MainActivity extends Activity {
     Set<BluetoothDevice> pairedDevices;
 
     public void Button1_OnClick(View v){
-        Toast.makeText(this, "Turning led 1 on", Toast.LENGTH_LONG).show();
+        showText("Turning led 1 on");
         Led_1_On();
     }
 
     public void Button2_OnClick(View v){
-        Toast.makeText(this, "Turning led 2 on", Toast.LENGTH_LONG).show();
+        showText("Turning led 2 on");
         Led_2_On();
     }
 
     public void Button3_OnClick(View v){
-        Toast.makeText(this, "Switching all lights off", Toast.LENGTH_LONG).show();
+        showText("Switching all lights off");
         Led_all_off();
     }
 
+    private void showText(String text) {
+        boolean toast = false;
+        if (toast) {
+            Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+        } else {
+            Snackbar.make(findViewById(R.id.list), text, Snackbar.LENGTH_LONG).show();
+        }
+    }
+
     public void Button4_OnClick(View v){
-        openProximityScreen();
+        openLocationScreen();
     }
 
     public void sendBtMsg(String msg2send){
@@ -92,9 +105,28 @@ public class MainActivity extends Activity {
         sendBtMsg("2");
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_view, menu);
+        return true;
+    }
 
-    public void openProximityScreen()  {
+    public void clickMenuLocation(MenuItem menuItem)  {
+        openLocationScreen();
+    }
+
+    public void clickMenuLights(MenuItem menuItem)  {
+        openLightsScreen();
+    }
+
+    public void openLocationScreen()  {
         Intent intent = new Intent(this, ProximityAlertActivity.class);
+        startActivity(intent);
+    }
+
+    public void openLightsScreen()  {
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
@@ -102,11 +134,13 @@ public class MainActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.light_panel);
+        Toolbar myToolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
         // Verify that the device supports Bluetooth
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
-            Toast.makeText(this, "Device doesn't support Bluetooth...", Toast.LENGTH_LONG).show();
+            showText("Device doesn't support Bluetooth...");
             return;
         }
         // Verify that the adapter is enabled

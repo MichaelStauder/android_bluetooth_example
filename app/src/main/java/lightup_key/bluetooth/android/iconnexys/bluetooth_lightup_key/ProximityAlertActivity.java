@@ -1,7 +1,6 @@
 package lightup_key.bluetooth.android.iconnexys.bluetooth_lightup_key;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +12,12 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -25,7 +29,7 @@ import java.text.NumberFormat;
 
 import lightup_key.bluetooth.android.iconnexys.bluetooth_lightup_key.intents.ProximityIntentReceiver;
 
-public class ProximityAlertActivity extends Activity {
+public class ProximityAlertActivity extends AppCompatActivity {
 
     private static final long MINIMUM_DISTANCECHANGE_FOR_UPDATE = 1; // in Meters
     private static final long MINIMUM_TIME_BETWEEN_UPDATE = 1000; // in Milliseconds
@@ -52,9 +56,11 @@ public class ProximityAlertActivity extends Activity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.coordinate_selection);
+        Toolbar myToolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
         if (checkLocationPermission()) {
-            Toast.makeText(this, "No location permission. Aborting...", Toast.LENGTH_LONG).show();
+            showText("No location permission. Aborting...");
             return;
         }
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -86,12 +92,46 @@ public class ProximityAlertActivity extends Activity {
 
     }
 
+    private void showText(String text) {
+        boolean toast = false;
+        if (toast) {
+            Toast.makeText(this, text, Toast.LENGTH_LONG).show();
+        } else {
+            Snackbar.make(findViewById(R.id.list), text, Snackbar.LENGTH_LONG).show();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_view, menu);
+        return true;
+    }
+
+    public void clickMenuLocation(MenuItem menuItem)  {
+        openLocationScreen();
+    }
+
+    public void clickMenuLights(MenuItem menuItem)  {
+        openLightsScreen();
+    }
+
+    public void openLocationScreen()  {
+        Intent intent = new Intent(this, ProximityAlertActivity.class);
+        startActivity(intent);
+    }
+
+    public void openLightsScreen()  {
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
     private void saveProximityAlertPoint() {
-        Toast.makeText(this, "Saving location...", Toast.LENGTH_LONG).show();
+        showText("Saving location...");
         if (checkLocationPermission()) return;
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location == null) {
-            Toast.makeText(this, "No last known location. Aborting...", Toast.LENGTH_LONG).show();
+            showText("No last known location. Aborting...");
             return;
         }
 
@@ -115,7 +155,7 @@ public class ProximityAlertActivity extends Activity {
     }
 
     private void populateCoordinatesFromLastKnownLocation() {
-        Toast.makeText(this, "Finding your location...", Toast.LENGTH_LONG).show();
+        showText("Finding your location...");
         if (checkLocationPermission()) return;
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         if (location!=null) {
@@ -166,7 +206,7 @@ public class ProximityAlertActivity extends Activity {
         public void onLocationChanged(Location location) {
             Location pointLocation = retrievelocationFromPreferences(coordinateName);
             float distance = location.distanceTo(pointLocation);
-            Toast.makeText(ProximityAlertActivity.this,"Distance from (" + coordinateName + "):"+distance, Toast.LENGTH_LONG).show();
+            showText("Distance from (" + coordinateName + "):" + distance);
         }
         public void onStatusChanged(String s, int i, Bundle b) {
         }

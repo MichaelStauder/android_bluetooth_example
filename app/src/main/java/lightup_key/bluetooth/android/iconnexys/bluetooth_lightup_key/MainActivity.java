@@ -6,11 +6,7 @@ import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -26,37 +22,30 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
 
     private final static int REQUEST_ENABLE_BT = 1;
 
-    static final List<String> available_bluetooth_devices = new ArrayList<String>();
+    static final List<String> available_bluetooth_devices = new ArrayList<>();
     static BluetoothSocket mmSocket;
     BluetoothDevice mmDevice = null;
     Set<BluetoothDevice> pairedDevices;
 
     public void Button1_OnClick(View v){
-        showText("Turning led 1 on");
+        final String message = String.format(getString(R.string.lights_turn_on_led), "1");
+        showText(message);
         Led_1_On();
     }
 
     public void Button2_OnClick(View v){
-        showText("Turning led 2 on");
+        final String message = String.format(getString(R.string.lights_turn_on_led), "2");
+        showText(message);
         Led_2_On();
     }
 
     public void Button3_OnClick(View v){
-        showText("Switching all lights off");
+        showText(getString(R.string.lights_turn_off_all_leds));
         Led_all_off();
-    }
-
-    private void showText(String text) {
-        boolean toast = false;
-        if (toast) {
-            Toast.makeText(this, text, Toast.LENGTH_LONG).show();
-        } else {
-            Snackbar.make(findViewById(R.id.list), text, Snackbar.LENGTH_LONG).show();
-        }
     }
 
     public void Button4_OnClick(View v){
@@ -106,31 +95,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_view, menu);
-        return true;
-    }
-
-    public void clickMenuLocation(MenuItem menuItem)  {
-        openLocationScreen();
-    }
-
-    public void clickMenuLights(MenuItem menuItem)  {
-        openLightsScreen();
-    }
-
-    public void openLocationScreen()  {
-        Intent intent = new Intent(this, ProximityAlertActivity.class);
-        startActivity(intent);
-    }
-
-    public void openLightsScreen()  {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
-    }
-
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.light_panel);
@@ -140,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
         // Verify that the device supports Bluetooth
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
-            showText("Device doesn't support Bluetooth...");
+            showText(getString(R.string.lights_device_no_bluetooth));
             return;
         }
         // Verify that the adapter is enabled
@@ -163,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         ListView listv = findViewById(R.id.list);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_devices, available_bluetooth_devices);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.list_devices, available_bluetooth_devices);
         listv.setAdapter( adapter );
 
         listv.setTextFilterEnabled(true);

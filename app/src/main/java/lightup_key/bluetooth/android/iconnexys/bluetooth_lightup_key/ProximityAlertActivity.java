@@ -5,51 +5,45 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.ListView;
+
+import com.google.android.gms.location.Geofence;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.List;
 
 import lightup_key.bluetooth.android.iconnexys.bluetooth_lightup_key.intents.ProximityIntentReceiver;
 
-public class ProximityAlertActivity extends AppCompatActivity {
+public class ProximityAlertActivity extends BaseActivity {
 
     private static final long MINIMUM_DISTANCECHANGE_FOR_UPDATE = 1; // in Meters
     private static final long MINIMUM_TIME_BETWEEN_UPDATE = 1000; // in Milliseconds
-
-    private static final long POINT_RADIUS = 1000; // Range sin Meters
-    private static final long PROX_ALERT_EXPIRATION = -1;
-
-    private static final String POINT_LATITUDE_KEY = "POINT_LATITUDE_KEY";
-    private static final String POINT_LONGITUDE_KEY = "POINT_LONGITUDE_KEY";
-    private static final String PROX_ALERT_INTENT = "lightup_key.bluetooth.android.iconnexys.ProximityAlert";
-
-    private static final NumberFormat nf = new DecimalFormat("##.########");
-    private static final String coordinateName = "led1location";
+    private static final float ANDROID_BUILDING_RADIUS_METERS = 60.0f;
+    private static final String PROXIMITY_ALERT_INTENT = "lightup_key.bluetooth.android.iconnexys.ProximityAlert";
+    private static final NumberFormat NUMBER_FORMAT = new DecimalFormat("##.########");
 
     private LocationManager locationManager;
-
+    private GeofenceStore geofenceStore;
     private EditText latitudeEditText;
     private EditText longitudeEditText;
+    private EditText pointIdEditText;
     private Button findCoordinatesButton;
     private Button savePointButton;
+    private Button clearPointsButton;
+    private ListView listOfPoints;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,7 +54,7 @@ public class ProximityAlertActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
         if (checkLocationPermission()) {
-            showText("No location permission. Aborting...");
+            showText(getString(R.string.proximity_no_location_permission));
             return;
         }
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -73,8 +67,10 @@ public class ProximityAlertActivity extends AppCompatActivity {
 
         latitudeEditText = findViewById(R.id.point_latitude);
         longitudeEditText = findViewById(R.id.point_longitude);
+        pointIdEditText = findViewById(R.id.point_id);
         findCoordinatesButton = findViewById(R.id.find_coordinates_button);
         savePointButton = findViewById(R.id.save_point_button);
+        clearPointsButton = findViewById(R.id.clear_points_button);
 
         findCoordinatesButton.setOnClickListener(new OnClickListener() {
             @Override
@@ -83,85 +79,84 @@ public class ProximityAlertActivity extends AppCompatActivity {
             }
         });
 
+        geofenceStore = new GeofenceStore(this);
         savePointButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveProximityAlertPoint();
             }
         });
+        clearPointsButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                clearAllGeofences();
+            }
+        });
 
+        final ArrayAdapter<GeofenceEntry> adapter = new ArrayAdapter<>(this, R.layout.list_devices, geofenceStore.getGeofenceList());
+        listOfPoints = findViewById(R.id.listPoints);
+        listOfPoints.setAdapter(adapter);
     }
 
-    private void showText(String text) {
-        boolean toast = false;
-        if (toast) {
-            Toast.makeText(this, text, Toast.LENGTH_LONG).show();
-        } else {
-            Snackbar.make(findViewById(R.id.list), text, Snackbar.LENGTH_LONG).show();
-        }
-    }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_view, menu);
-        return true;
-    }
-
-    public void clickMenuLocation(MenuItem menuItem)  {
-        openLocationScreen();
-    }
-
-    public void clickMenuLights(MenuItem menuItem)  {
-        openLightsScreen();
-    }
-
-    public void openLocationScreen()  {
-        Intent intent = new Intent(this, ProximityAlertActivity.class);
-        startActivity(intent);
-    }
-
-    public void openLightsScreen()  {
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+    private void clearAllGeofences() {
+        showText(getString(R.string.proximity_clear_all_locations));
+        geofenceStore.clearAll();
+        listOfPoints.invalidateViews();
     }
 
     private void saveProximityAlertPoint() {
-        showText("Saving location...");
-        if (checkLocationPermission()) return;
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (location == null) {
-            showText("No last known location. Aborting...");
+        showText(getString(R.string.proximity_save_location));
+
+        final String geofenceId = pointIdEditText.getText().toString();
+        final String latitudeText = latitudeEditText.getText().toString();
+        final String longitudeText = longitudeEditText.getText().toString();
+        double latitude;
+        double longitude;
+        try {
+            latitude = Double.parseDouble(latitudeText);
+            longitude = Double.parseDouble(longitudeText);
+        } catch (NumberFormatException e)  {
+            showText(getString(R.string.proximity_parse_error));
             return;
         }
-
-        saveCoordinatesInPreferences(coordinateName, (float) location.getLatitude(), (float) location.getLongitude());
-        addProximityAlert(location.getLatitude(), location.getLongitude());
+        final GeofenceEntry geofenceEntry = new GeofenceEntry(geofenceId, latitude, longitude,
+                ANDROID_BUILDING_RADIUS_METERS, Geofence.NEVER_EXPIRE, Geofence.GEOFENCE_TRANSITION_ENTER | Geofence.GEOFENCE_TRANSITION_EXIT);
+        geofenceStore.setGeofence(geofenceId, geofenceEntry);
+        listOfPoints.invalidateViews();
+        addProximityAlert(geofenceEntry);
     }
 
-    private void addProximityAlert(double latitude, double longitude) {
-        Intent intent = new Intent(PROX_ALERT_INTENT);
-        PendingIntent proximityIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-        if (checkLocationPermission()) return;
-        locationManager.addProximityAlert(
-                latitude, // the latitude of the central point of the alert region
-                longitude, // the longitude of the central point of the alert region
-                POINT_RADIUS, // the radius of the central point of the alert region, in meters
-                PROX_ALERT_EXPIRATION, // time for this proximity alert, in milliseconds, or -1 to indicate no expiration
-                proximityIntent // will be used to generate an Intent to fire when entry to or exit from the alert region is detected
-        );
-        IntentFilter filter = new IntentFilter(PROX_ALERT_INTENT);
-        registerReceiver(new ProximityIntentReceiver(), filter);
+    private void addProximityAlert(GeofenceEntry geofenceEntry) throws SecurityException {
+        try {
+            Intent intent = new Intent(PROXIMITY_ALERT_INTENT);
+            PendingIntent pendingProximityIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+            locationManager.addProximityAlert(
+                    geofenceEntry.getLatitude(),
+                    geofenceEntry.getLongitude(),
+                    geofenceEntry.getRadius(),
+                    geofenceEntry.getExpirationDuration(),
+                    pendingProximityIntent // will be used to generate an Intent to fire when entry to or exit from the alert region is detected
+            );
+            IntentFilter filter = new IntentFilter(PROXIMITY_ALERT_INTENT);
+            registerReceiver(new ProximityIntentReceiver(), filter);
+        } catch (IllegalArgumentException exception)  {
+            showText(exception.getMessage());
+        }
     }
 
     private void populateCoordinatesFromLastKnownLocation() {
-        showText("Finding your location...");
+        showText(getString(R.string.proximity_finding_location));
         if (checkLocationPermission()) return;
         Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        if (location!=null) {
-            latitudeEditText.setText(nf.format(location.getLatitude()));
-            longitudeEditText.setText(nf.format(location.getLongitude()));
+        pointIdEditText.setText(getString(R.string.proximity_name_your_location));
+        if (location != null) {
+            latitudeEditText.setText(NUMBER_FORMAT.format(location.getLatitude()));
+            longitudeEditText.setText(NUMBER_FORMAT.format(location.getLongitude()));
+        } else {
+            showText(getString(R.string.proximity_location_failed));
         }
+        pointIdEditText.selectAll();
     }
 
     private boolean checkLocationPermission() {
@@ -179,42 +174,29 @@ public class ProximityAlertActivity extends AppCompatActivity {
         return false;
     }
 
-    private void saveCoordinatesInPreferences(final String locationId, float latitude, float longitude) {
-        String preferenceKey = getPreferenceKey(locationId);
-        SharedPreferences prefs = this.getSharedPreferences(preferenceKey, Context.MODE_PRIVATE);
-        SharedPreferences.Editor prefsEditor = prefs.edit();
-        prefsEditor.putFloat(POINT_LATITUDE_KEY, latitude);
-        prefsEditor.putFloat(POINT_LONGITUDE_KEY, longitude);
-        prefsEditor.apply();
-    }
-
-    private Location retrievelocationFromPreferences(final String coordinateName) {
-        String preferenceKey = getPreferenceKey(coordinateName);
-        SharedPreferences prefs = this.getSharedPreferences(preferenceKey, Context.MODE_PRIVATE);
-        Location location = new Location("POINT_LOCATION");
-        location.setLatitude(prefs.getFloat(POINT_LATITUDE_KEY, 0));
-        location.setLongitude(prefs.getFloat(POINT_LONGITUDE_KEY, 0));
-        return location;
-    }
-
-    @NonNull
-    private String getPreferenceKey(String coordinateName) {
-        return getClass().getSimpleName() +"-" + coordinateName;
-    }
-
     public class LocationChangeListener implements LocationListener {
-        public void onLocationChanged(Location location) {
-            Location pointLocation = retrievelocationFromPreferences(coordinateName);
-            float distance = location.distanceTo(pointLocation);
-            showText("Distance from (" + coordinateName + "):" + distance);
+        public void onLocationChanged(final Location location) {
+            final StringBuilder message = new StringBuilder();
+            final List<GeofenceEntry> geofenceList = geofenceStore.getGeofenceList();
+            if (geofenceList.size() > 0) {
+                for (GeofenceEntry geofence : geofenceList) {
+                    final Location pointLocation = geofence.toLocation();
+                    final float distanceInMeters = location.distanceTo(pointLocation);
+                    final String distanceMessage = String.format(getString(R.string.proximity_distance_from_location), geofence.getId(), distanceInMeters);
+                    message.append(distanceMessage).append("\n");
+                }
+                showText(message.toString());
+            }
         }
+
         public void onStatusChanged(String s, int i, Bundle b) {
         }
+
         public void onProviderDisabled(String s) {
         }
+
         public void onProviderEnabled(String s) {
         }
     }
-
 
 }

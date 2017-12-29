@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.LinearLayoutCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="lightup_key.bluetooth.android.iconnexys.bluetooth_lightup_key.MainActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_height="match_parent" android:orientation="vertical">
     <android.support.v7.widget.Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
@@ -14,69 +14,57 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
 
-    <Button
-        android:id="@+id/button1"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="140dp"
-        android:layout_height="43dp"
-        android:layout_below="@+id/my_toolbar"
-        android:layout_centerHorizontal="true"
-        android:onClick="Button1_OnClick"
-        android:text="@string/action_led1_on"
-        android:visibility="visible"
-        tools:layout_editor_absoluteX="147dp" />
+    <android.support.v7.widget.ButtonBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+        <Button
+            android:id="@+id/button1"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="43dp"
+            android:onClick="Button1_OnClick"
+            android:text="@string/action_led1_on"
+            android:visibility="visible"/>
 
-    <Button
-        android:id="@+id/button2"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="140dp"
-        android:layout_height="43dp"
-        android:layout_below="@+id/button1"
-        android:layout_centerHorizontal="true"
-        android:onClick="Button2_OnClick"
-        android:text="@string/action_led2_on"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button1" />
+        <Button
+            android:id="@+id/button2"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="43dp"
+            android:onClick="Button2_OnClick"
+            android:text="@string/action_led2_on" />
+    </android.support.v7.widget.ButtonBarLayout>
 
-    <Button
-        android:id="@+id/button3"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="140dp"
-        android:layout_height="43dp"
-        android:layout_below="@+id/button2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:onClick="Button3_OnClick"
-        android:text="@string/action_all_off"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button2" />
+    <android.support.v7.widget.ButtonBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp">
+        <Button
+            android:id="@+id/button3"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="43dp"
+            android:onClick="Button3_OnClick"
+            android:text="@string/action_all_off" />
 
-    <Button
-        android:id="@+id/button4"
-        style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="140dp"
-        android:layout_height="43dp"
-        android:layout_below="@+id/button3"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:onClick="Button4_OnClick"
-        android:text="@string/action_location"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button3" />
+        <Button
+            android:id="@+id/button4"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="43dp"
+            android:onClick="Button4_OnClick"
+            android:text="@string/action_location" />
+    </android.support.v7.widget.ButtonBarLayout>
 
     <ListView
         android:id="@+id/list"
         android:background="@drawable/bg_key"
-        android:layout_width="292dp"
-        android:layout_height="140dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
         android:layout_marginBottom="39dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -84,4 +72,4 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.977" />
 
-</RelativeLayout>
+</android.support.v7.widget.LinearLayoutCompat>

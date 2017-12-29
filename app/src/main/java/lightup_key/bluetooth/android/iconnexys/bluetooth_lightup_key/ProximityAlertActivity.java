@@ -114,8 +114,8 @@ public class ProximityAlertActivity extends BaseActivity {
         double latitude;
         double longitude;
         try {
-            latitude = Double.parseDouble(latitudeText);
-            longitude = Double.parseDouble(longitudeText);
+            latitude = Double.parseDouble(latitudeText.replace(',', '.'));
+            longitude = Double.parseDouble(longitudeText.replace(',', '.'));
         } catch (NumberFormatException e)  {
             showText(getString(R.string.proximity_parse_error));
             return;

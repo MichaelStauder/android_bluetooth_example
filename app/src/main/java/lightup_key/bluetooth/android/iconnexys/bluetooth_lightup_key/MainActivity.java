@@ -1,17 +1,19 @@
 package lightup_key.bluetooth.android.iconnexys.bluetooth_lightup_key;
 
-import android.app.Activity;
-import android.bluetooth.BluetoothSocket;
-import android.graphics.Color;
-import android.os.Bundle;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.widget.EditText;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -20,35 +22,34 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
-
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
-
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
 
     private final static int REQUEST_ENABLE_BT = 1;
 
-    static final List<String> available_bluetooth_devices = new ArrayList<String>();
+    static final List<String> available_bluetooth_devices = new ArrayList<>();
     static BluetoothSocket mmSocket;
     BluetoothDevice mmDevice = null;
     Set<BluetoothDevice> pairedDevices;
 
     public void Button1_OnClick(View v){
-        Led_all_off();
-    }
-
-    public void Button2_OnClick(View v){
+        final String message = String.format(getString(R.string.lights_turn_on_led), "1");
+        showText(message);
         Led_1_On();
     }
 
-    public void Button3_OnClick(View v){
+    public void Button2_OnClick(View v){
+        final String message = String.format(getString(R.string.lights_turn_on_led), "2");
+        showText(message);
         Led_2_On();
-        openProximityScreen();
+    }
+
+    public void Button3_OnClick(View v){
+        showText(getString(R.string.lights_turn_off_all_leds));
+        Led_all_off();
+    }
+
+    public void Button4_OnClick(View v){
+        openLocationScreen();
     }
 
     public void sendBtMsg(String msg2send){
@@ -93,45 +94,40 @@ public class MainActivity extends Activity {
         sendBtMsg("2");
     }
 
-
-    public void openProximityScreen()  {
-        Intent intent = new Intent(this, ProximityAlertActivity.class);
-        startActivity(intent);
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.light_panel);
+        Toolbar myToolbar = findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
         // Verify that the device supports Bluetooth
         BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {
-            // Device doesn't support Bluetooth
+            showText(getString(R.string.lights_device_no_bluetooth));
+            return;
         }
-        else {
-            // Verify that the adapter is enabled
-            if (!mBluetoothAdapter.isEnabled()) {
-                Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-            }
-
-            // Verify that the paired device is already available.
-            pairedDevices = mBluetoothAdapter.getBondedDevices();
-
-            if (pairedDevices.size() > 0) {
-                // There are paired devices. Get the name and address of each paired device.
-                List<String> values = new ArrayList<String>();
-                for (BluetoothDevice device : pairedDevices) {
-                    String deviceName = device.getName();
-                    String deviceHardwareAddress = device.getAddress(); // MAC address
-                    available_bluetooth_devices.add(deviceName);
-                }
-            }
+        // Verify that the adapter is enabled
+        if (!mBluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
         }
 
-        ListView listv = (ListView) findViewById(R.id.list);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, R.layout.list_devices, available_bluetooth_devices);
+        // Verify that the paired device is already available.
+        pairedDevices = mBluetoothAdapter.getBondedDevices();
+
+        if (pairedDevices.size() > 0) {
+            // There are paired devices. Get the name and address of each paired device.
+            List<String> values = new ArrayList<String>();
+            for (BluetoothDevice device : pairedDevices) {
+                String deviceName = device.getName();
+                String deviceHardwareAddress = device.getAddress(); // MAC address
+                available_bluetooth_devices.add(deviceName);
+            }
+        }
+
+        ListView listv = findViewById(R.id.list);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.list_devices, available_bluetooth_devices);
         listv.setAdapter( adapter );
 
         listv.setTextFilterEnabled(true);

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/iconHamburger"
+        android:icon="@drawable/icon_hamburger"
+        app:showAsAction="ifRoom"
+        android:title="@string/menuitem_other">
+        <menu>
+            <item
+                android:id="@+id/nav_lights"
+                android:icon="@drawable/icon_menuitem_lights"
+                android:title="@string/menuitem_lights"
+                android:onClick="clickMenuLights"/>
+            <item
+                android:id="@+id/nav_location"
+                android:icon="@drawable/icon_menuitem_location"
+                android:title="@string/menuitem_location"
+                android:onClick="clickMenuLocation"/>
+        </menu>
+    </item>
+</menu>

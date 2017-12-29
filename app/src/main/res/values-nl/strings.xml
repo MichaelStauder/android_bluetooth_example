@@ -1,0 +1,29 @@
+<resources>
+    <string name="app_name">Slimme Sleutels</string>
+    <string name="menuitem_other">Overig</string>
+    <string name="menuitem_lights">Lichten</string>
+    <string name="menuitem_location">Lokaties instellen</string>
+    <string name="menu_header">Menu</string>
+    <string name="action_led1_on">LED 1 Aan</string>
+    <string name="action_led2_on">LED 2 Aan</string>
+    <string name="action_all_off">Alles Uit</string>
+    <string name="action_location">Lokaties instellen</string>
+    <string name="action_find_coordinates">Zoek coördinaten</string>
+    <string name="action_save_point">Lokatie opslaan</string>
+    <string name="action_clear_all_points">Verwijder lokaties</string>
+    <string name="proximity_finding_location">Zoeken naar lokatie…</string>
+    <string name="proximity_location_failed">Lokatie kan niet worden bepaald…</string>
+    <string name="proximity_clear_all_locations">Verwijderen van opgeslagen lokaties…</string>
+    <string name="proximity_no_location_permission">Geen lokatie permissies. Afbreken…</string>
+    <string name="proximity_save_location">Lokatie bewaren…</string>
+    <string name="proximity_no_last_location">Geen laatst bekende lokatie. Afbreken…</string>
+    <string name="proximity_distance_from_location">Afstand van (%s): %.1f meter</string>
+    <string name="proximity_parse_error">Latitude/Longitude moet numeriek zijn</string>
+    <string name="proximity_name_your_location">Naam van lokatie</string>
+    <string name="lights_device_no_bluetooth">Uw apparaat ondersteunt geen Bluetooth…</string>
+    <string name="lights_turn_on_led">Aanzetten van led \'%s\'</string>
+    <string name="lights_turn_off_all_leds">All lichten uitzetten</string>
+    <string name="proximity_label_point_id">Naam</string>
+    <string name="proximity_label_point_latitude">Latitude</string>
+    <string name="proximity_label_point_longitude">Longitude</string>
+</resources>

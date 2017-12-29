@@ -1,3 +1,30 @@
 <resources>
-    <string name="app_name">bluetooth_lightup_key</string>
+    <string name="app_name">Smart Keys</string>
+    <string name="menuitem_other">Other</string>
+    <string name="menuitem_lights">Lights</string>
+    <string name="menuitem_location">Set Location</string>
+    <string name="menu_header">Menu</string>
+    <string name="action_led1_on">LED 1 ON</string>
+    <string name="action_led2_on">LED 2 ON</string>
+    <string name="action_all_off">ALL OFF</string>
+    <string name="action_location">SET LOCATION</string>
+    <string name="action_find_coordinates">Find Coordinates</string>
+    <string name="action_save_point">Save Point</string>
+    <string name="action_clear_all_points">Remove Points</string>
+    <string name="proximity_finding_location">"Location cannot be determined…"</string>
+    <string name="proximity_location_failed">"Location cannot be determined…"</string>
+    <string name="proximity_clear_all_locations">Removing stored locations…</string>
+    <string name="proximity_no_location_permission">No location permission. Aborting…</string>
+    <string name="proximity_save_location">Saving location…</string>
+    <string name="proximity_no_last_location">No last known location. Aborting…</string>
+    <string name="proximity_distance_from_location">Distance from (%s): %.1f meter</string>
+    <string name="proximity_parse_error">Latitude/Longitude should be numeric</string>
+    <string name="proximity_name_your_location">Name your location</string>
+    <string name="lights_device_no_bluetooth">Device doesn\'t support Bluetooth…</string>
+    <string name="lights_turn_on_led">Turning led \'%s\' on</string>
+    <string name="lights_turn_off_all_leds">Switching all lights off</string>
+    <string name="proximity_label_point_id">Name</string>
+    <string name="proximity_label_point_latitude">Latitude</string>
+    <string name="proximity_label_point_longitude">Longitude</string>
+
 </resources>

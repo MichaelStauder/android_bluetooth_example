@@ -1,34 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.LinearLayoutCompat
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_height="match_parent" android:orientation="vertical">
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+
+    <TextView
+        android:id="@+id/point_id_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@+id/point_id"
+        android:text="@string/proximity_label_point_id" />
+    <EditText
+        android:id="@+id/point_id"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="25dip"
+        android:layout_marginRight="25dip"
+        android:inputType="text"/>
+
+    <TextView
+        android:id="@+id/point_latitude_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@+id/point_latitude"
+        android:text="@string/proximity_label_point_latitude" />
     <EditText
         android:id="@+id/point_latitude"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dip"
         android:layout_marginRight="25dip"
-        />
+        android:inputType="numberDecimal"/>
 
+    <TextView
+        android:id="@+id/point_longitude_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:labelFor="@+id/point_longitude"
+        android:text="@string/proximity_label_point_longitude" />
     <EditText
         android:id="@+id/point_longitude"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="25dip"
         android:layout_marginRight="25dip"
-        />
+        android:inputType="numberDecimal"/>
 
-    <Button
-        android:id="@+id/find_coordinates_button"
-        android:text="Find Coordinates"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
+    <android.support.v7.widget.ButtonBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <Button
+            android:id="@+id/find_coordinates_button"
+            android:text="@string/action_find_coordinates"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-    <Button
-        android:id="@+id/save_point_button"
-        android:text="Save Point"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
+        <Button
+            android:id="@+id/save_point_button"
+            android:text="@string/action_save_point"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </android.support.v7.widget.ButtonBarLayout>
+
+    <android.support.v7.widget.ButtonBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/clear_points_button"
+            android:text="@string/action_clear_all_points"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </android.support.v7.widget.ButtonBarLayout>
+
+    <ListView
+        android:id="@+id/listPoints"
+        android:background="@drawable/bg_key"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="39dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.977" />
+
+
 </android.support.v7.widget.LinearLayoutCompat>

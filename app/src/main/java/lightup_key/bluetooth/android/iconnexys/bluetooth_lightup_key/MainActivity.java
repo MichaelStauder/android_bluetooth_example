@@ -1,9 +1,6 @@
 package lightup_key.bluetooth.android.iconnexys.bluetooth_lightup_key;
 
-import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothSocket;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -15,20 +12,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.UUID;
 
 public class MainActivity extends BaseActivity {
 
-    private final static int REQUEST_ENABLE_BT = 1;
-
     static final List<String> available_bluetooth_devices = new ArrayList<>();
-    static BluetoothSocket mmSocket;
-    BluetoothDevice mmDevice = null;
     Set<BluetoothDevice> pairedDevices;
 
     public void Button1_OnClick(View v){
@@ -52,46 +42,19 @@ public class MainActivity extends BaseActivity {
         openLocationScreen();
     }
 
-    public void sendBtMsg(String msg2send){
 
-        final UUID MY_SSP_UUID = UUID.fromString("94f39d29-7d6d-437d-973b-fba39e49d4ee");
-
-        if ( mmDevice == null ) {
-           return;
-        }
-
-        try {
-
-            mmSocket = mmDevice.createRfcommSocketToServiceRecord(MY_SSP_UUID);
-            if (!mmSocket.isConnected()){
-                mmSocket.connect();
-            }
-
-            String msg = msg2send;
-            //msg += "\n";
-            OutputStream mmOutputStream = mmSocket.getOutputStream();
-            mmOutputStream.write(msg.getBytes());
-
-            mmSocket.close();
-
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-    }
 
     // candidate: command factory?
     public void Led_all_off() {
-        sendBtMsg("0");
+        sendBluetoothMessage("0");
     }
 
     public void Led_1_On() {
-        sendBtMsg("1");
+        sendBluetoothMessage("1");
     }
 
     public void Led_2_On() {
-        sendBtMsg("2");
+        sendBluetoothMessage("2");
     }
 
     @Override
@@ -101,24 +64,13 @@ public class MainActivity extends BaseActivity {
         Toolbar myToolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        // Verify that the device supports Bluetooth
-        BluetoothAdapter mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mBluetoothAdapter == null) {
+        pairedDevices = getPairedBluetoothDevices();
+        if (pairedDevices.size() == 0)  {
             showText(getString(R.string.lights_device_no_bluetooth));
             return;
-        }
-        // Verify that the adapter is enabled
-        if (!mBluetoothAdapter.isEnabled()) {
-            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
-        }
-
-        // Verify that the paired device is already available.
-        pairedDevices = mBluetoothAdapter.getBondedDevices();
-
-        if (pairedDevices.size() > 0) {
+        } else {
+            available_bluetooth_devices.clear();
             // There are paired devices. Get the name and address of each paired device.
-            List<String> values = new ArrayList<String>();
             for (BluetoothDevice device : pairedDevices) {
                 String deviceName = device.getName();
                 String deviceHardwareAddress = device.getAddress(); // MAC address
@@ -126,10 +78,9 @@ public class MainActivity extends BaseActivity {
             }
         }
 
-        ListView listv = findViewById(R.id.list);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, R.layout.list_devices, available_bluetooth_devices);
+        ListView listv = findViewById(R.id.list);
         listv.setAdapter( adapter );
-
         listv.setTextFilterEnabled(true);
         listv.setOnItemClickListener(new OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
@@ -144,7 +95,7 @@ public class MainActivity extends BaseActivity {
             int i = 0;
             for (BluetoothDevice device : pairedDevices){
                 if ( position == i ) {
-                    mmDevice = device;
+                    setActiveDevice(device);
                 }
                 ++i;
             }
@@ -157,9 +108,11 @@ public class MainActivity extends BaseActivity {
             Toast.makeText(getApplicationContext(),
                     ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
 
-
             }
         });
 
     }
+
+
+
 }

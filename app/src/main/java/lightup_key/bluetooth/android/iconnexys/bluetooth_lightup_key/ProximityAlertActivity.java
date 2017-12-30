@@ -184,6 +184,9 @@ public class ProximityAlertActivity extends BaseActivity {
                     final float distanceInMeters = location.distanceTo(pointLocation);
                     final String distanceMessage = String.format(getString(R.string.proximity_distance_from_location), geofence.getId(), distanceInMeters);
                     message.append(distanceMessage).append("\n");
+                    if (distanceInMeters < 10) {
+                        sendBluetoothMessage(geofence.getId());
+                    }
                 }
                 showText(message.toString());
             }
